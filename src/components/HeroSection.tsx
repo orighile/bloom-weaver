@@ -74,7 +74,7 @@ const HeroSection = () => {
               ))}
             </div>
             <p className="text-sm text-charcoal-light">
-              <span className="font-semibold text-charcoal">Number of+</span> events transformed across Texas
+              <span className="font-semibold text-charcoal"></span> events transformed across Texas
             </p>
           </motion.div>
         </div>
