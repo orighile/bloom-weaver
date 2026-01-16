@@ -1,17 +1,13 @@
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import heroBackdrop from '@/assets/hero-backdrop.jpg';
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import heroBackdrop from "@/assets/hero-backdrop.jpg";
 
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <img 
-          src={heroBackdrop} 
-          alt="Luxury rose flower backdrop" 
-          className="w-full h-full object-cover"
-        />
+        <img src={heroBackdrop} alt="Luxury rose flower backdrop" className="w-full h-full object-cover" />
         <div className="absolute inset-0 hero-overlay" />
       </div>
 
@@ -33,8 +29,7 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="text-4xl md:text-5xl lg:text-6xl font-serif leading-tight mb-6"
           >
-            Luxury Rose Backdrops for{' '}
-            <span className="italic">Unforgettable</span> Events
+            Luxury Rose Backdrops for <span className="italic">Unforgettable</span> Events
           </motion.h1>
 
           <motion.p
@@ -43,8 +38,8 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-lg md:text-xl text-charcoal-light leading-relaxed mb-10 max-w-xl"
           >
-            Transforming weddings, celebrations, and corporate events across Austin 
-            and beyond with breathtaking floral experiences.
+            Transforming weddings, celebrations, and corporate events across Austin and beyond with breathtaking floral
+            experiences.
           </motion.p>
 
           <motion.div
@@ -70,8 +65,8 @@ const HeroSection = () => {
           >
             <div className="flex -space-x-2">
               {[1, 2, 3, 4].map((i) => (
-                <div 
-                  key={i} 
+                <div
+                  key={i}
                   className="w-10 h-10 rounded-full bg-blush border-2 border-background flex items-center justify-center"
                 >
                   <span className="text-xs text-champagne">★</span>
@@ -79,7 +74,7 @@ const HeroSection = () => {
               ))}
             </div>
             <p className="text-sm text-charcoal-light">
-              <span className="font-semibold text-charcoal">500+</span> events transformed across Texas
+              <span className="font-semibold text-charcoal">Number of+</span> events transformed across Texas
             </p>
           </motion.div>
         </div>
