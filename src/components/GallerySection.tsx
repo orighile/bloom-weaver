@@ -1,43 +1,49 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
-import galleryWedding from '@/assets/gallery-wedding.jpg';
-import galleryCorporate from '@/assets/gallery-corporate.jpg';
-import galleryQuince from '@/assets/gallery-quince.jpg';
-import galleryBabyshower from '@/assets/gallery-babyshower.jpg';
-import galleryBridal from '@/assets/gallery-bridal.jpg';
-import heroBackdrop from '@/assets/hero-backdrop.jpg';
+import galleryWhiteRose from '@/assets/gallery-white-rose.jpg';
+import galleryRedRose from '@/assets/gallery-red-rose.jpg';
+import galleryPinkCream from '@/assets/gallery-pink-cream.jpg';
+import galleryPinkMix from '@/assets/gallery-pink-mix.jpg';
+import galleryPureWhite from '@/assets/gallery-pure-white.jpg';
+import galleryDeepRed from '@/assets/gallery-deep-red.jpg';
+import galleryGreenWall from '@/assets/gallery-green-wall.jpg';
 
 const galleryItems = [
   {
-    src: galleryWedding,
-    title: 'Romantic Wedding Ceremony',
+    src: galleryPureWhite,
+    title: 'Pure White Rose Wall',
+    category: 'Signature',
+  },
+  {
+    src: galleryDeepRed,
+    title: 'Classic Red Rose Backdrop',
+    category: 'Signature',
+  },
+  {
+    src: galleryPinkMix,
+    title: 'Romantic Pink & Mauve',
     category: 'Wedding',
   },
   {
-    src: galleryCorporate,
-    title: 'Corporate Brand Launch',
-    category: 'Corporate',
-  },
-  {
-    src: galleryQuince,
-    title: 'Quinceañera Celebration',
-    category: 'Quinceañera',
-  },
-  {
-    src: galleryBabyshower,
-    title: 'Elegant Baby Shower',
-    category: 'Baby Shower',
-  },
-  {
-    src: galleryBridal,
-    title: 'Luxe Bridal Shower',
+    src: galleryPinkCream,
+    title: 'Blush Pink & Cream',
     category: 'Bridal Shower',
   },
   {
-    src: heroBackdrop,
-    title: 'Signature Rose Wall',
-    category: 'Backdrop',
+    src: galleryGreenWall,
+    title: 'Garden Greenery Wall',
+    category: 'Corporate',
+  },
+  {
+    src: galleryWhiteRose,
+    title: 'Elegant White Roses',
+    category: 'Wedding',
+  },
+  {
+    src: galleryRedRose,
+    title: 'Deep Red Statement',
+    category: 'Quinceañera',
   },
 ];
 
