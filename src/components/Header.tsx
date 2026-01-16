@@ -1,7 +1,11 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Menu, X, Settings } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 const navLinks = [
   { href: '#services', label: 'Services' },
@@ -12,6 +16,9 @@ const navLinks = [
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [newInquiriesCount, setNewInquiriesCount] = useState(0);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +27,33 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      const fetchNewInquiries = async () => {
+        const { count } = await supabase
+          .from('inquiries')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'new');
+        setNewInquiriesCount(count || 0);
+      };
+      fetchNewInquiries();
+
+      // Subscribe to realtime updates
+      const channel = supabase
+        .channel('inquiries-header')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'inquiries' },
+          () => fetchNewInquiries()
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, [user]);
 
   return (
     <motion.header
@@ -55,6 +89,22 @@ const Header = () => {
             <Button variant="hero" size="default" asChild>
               <a href="#contact">Get a Quote</a>
             </Button>
+            {user && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/admin')}
+                className="relative text-charcoal-light hover:text-champagne"
+              >
+                <Settings className="w-4 h-4 mr-1" />
+                Admin
+                {newInquiriesCount > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-champagne text-white text-xs">
+                    {newInquiriesCount}
+                  </Badge>
+                )}
+              </Button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -91,6 +141,25 @@ const Header = () => {
                   Get a Quote
                 </a>
               </Button>
+              {user && (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="mt-2 relative"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    navigate('/admin');
+                  }}
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Admin Dashboard
+                  {newInquiriesCount > 0 && (
+                    <Badge className="ml-2 bg-champagne text-white">
+                      {newInquiriesCount}
+                    </Badge>
+                  )}
+                </Button>
+              )}
             </div>
           </motion.div>
         )}

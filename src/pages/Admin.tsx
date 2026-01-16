@@ -194,7 +194,14 @@ const Admin = () => {
         >
           <div className="p-6 border-b border-border/50 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-serif text-charcoal">Inquiries</h2>
+              <h2 className="text-lg font-serif text-charcoal flex items-center gap-2">
+                Inquiries
+                {inquiries.filter(i => i.status === 'new').length > 0 && (
+                  <Badge className="bg-champagne text-white">
+                    {inquiries.filter(i => i.status === 'new').length} new
+                  </Badge>
+                )}
+              </h2>
               <p className="text-sm text-charcoal-light">
                 {inquiries.length} total inquiries
               </p>
@@ -229,7 +236,7 @@ const Admin = () => {
                 </TableHeader>
                 <TableBody>
                   {inquiries.map((inquiry) => (
-                    <TableRow key={inquiry.id}>
+                    <TableRow key={inquiry.id} className={inquiry.status === 'new' ? 'bg-champagne/5' : ''}>
                       <TableCell className="text-charcoal-light">
                         {format(new Date(inquiry.created_at), 'MMM d, yyyy')}
                       </TableCell>
