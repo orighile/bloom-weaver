@@ -6,7 +6,11 @@ import galleryCorporate from '@/assets/gallery-corporate.jpg';
 import galleryQuince from '@/assets/gallery-quince.jpg';
 import galleryBabyshower from '@/assets/gallery-babyshower.jpg';
 import galleryBridal from '@/assets/gallery-bridal.jpg';
-import heroBackdrop from '@/assets/hero-backdrop.jpg';
+import backdropPinkCream from '@/assets/backdrop-pink-cream.jpg';
+import backdropMixedRoses from '@/assets/backdrop-mixed-roses.jpg';
+import backdropWhiteRoses from '@/assets/backdrop-white-roses.jpg';
+import backdropRedRoses from '@/assets/backdrop-red-roses.jpg';
+import backdropGreenFloral from '@/assets/backdrop-green-floral.jpg';
 
 const galleryItems = [
   {
@@ -35,8 +39,28 @@ const galleryItems = [
     category: 'Bridal Shower',
   },
   {
-    src: heroBackdrop,
-    title: 'Signature Rose Wall',
+    src: backdropPinkCream,
+    title: 'Pink & Cream Rose Wall',
+    category: 'Backdrop',
+  },
+  {
+    src: backdropMixedRoses,
+    title: 'Mixed Rose Wall',
+    category: 'Backdrop',
+  },
+  {
+    src: backdropWhiteRoses,
+    title: 'White Rose Wall',
+    category: 'Backdrop',
+  },
+  {
+    src: backdropRedRoses,
+    title: 'Red Rose Wall',
+    category: 'Backdrop',
+  },
+  {
+    src: backdropGreenFloral,
+    title: 'Green Floral Wall',
     category: 'Backdrop',
   },
 ];
