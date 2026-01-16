@@ -6,6 +6,21 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { z } from 'zod';
+
+// Validation schema for form data
+const inquirySchema = z.object({
+  name: z.string().trim().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
+  email: z.string().trim().email('Please enter a valid email address').max(255, 'Email must be less than 255 characters'),
+  phone: z.string().trim().min(1, 'Phone is required').max(20, 'Phone must be less than 20 characters'),
+  event_type: z.string().min(1, 'Event type is required'),
+  event_date: z.string().nullable().optional(),
+  location: z.string().min(1, 'Location is required'),
+  vision: z.string().trim().min(1, 'Please tell us about your vision').max(2000, 'Vision must be less than 2000 characters'),
+  budget_range: z.string().nullable().optional(),
+  referral_source: z.string().max(200, 'Referral source must be less than 200 characters').nullable().optional(),
+});
 
 const eventTypes = [
   'Wedding',
@@ -39,17 +54,67 @@ const budgetRanges = [
 
 const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [eventType, setEventType] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
+  const [budgetRange, setBudgetRange] = useState<string>('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    
+    try {
+      // Collect and validate form data
+      const rawData = {
+        name: formData.get('name') as string,
+        email: formData.get('email') as string,
+        phone: formData.get('phone') as string,
+        event_type: eventType,
+        event_date: (formData.get('eventDate') as string) || null,
+        location: location,
+        vision: formData.get('vision') as string,
+        budget_range: budgetRange || null,
+        referral_source: (formData.get('source') as string) || null,
+      };
+
+      // Validate the data
+      const validatedData = inquirySchema.parse(rawData);
+
+      // Submit to database
+      const { error } = await supabase
+        .from('inquiries')
+        .insert({
+          name: validatedData.name,
+          email: validatedData.email,
+          phone: validatedData.phone,
+          event_type: validatedData.event_type,
+          event_date: validatedData.event_date || null,
+          location: validatedData.location,
+          vision: validatedData.vision,
+          budget_range: validatedData.budget_range || null,
+          referral_source: validatedData.referral_source || null,
+        });
+
+      if (error) throw error;
+
       toast.success('Thank you for your inquiry! We\'ll be in touch within 24 hours.');
+      form.reset();
+      setEventType('');
+      setLocation('');
+      setBudgetRange('');
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const firstError = error.errors[0];
+        toast.error(firstError.message);
+      } else {
+        console.error('Form submission error:', error);
+        toast.error('Failed to submit inquiry. Please try again.');
+      }
+    } finally {
       setIsSubmitting(false);
-      (e.target as HTMLFormElement).reset();
-    }, 1500);
+    }
   };
 
   return (
@@ -156,9 +221,11 @@ const ContactSection = () => {
                     Name <span className="text-champagne">*</span>
                   </label>
                   <Input 
-                    id="name" 
+                    id="name"
+                    name="name"
                     placeholder="Your full name" 
                     required 
+                    maxLength={100}
                     className="bg-background border-border focus:border-champagne focus:ring-champagne"
                   />
                 </div>
@@ -168,10 +235,12 @@ const ContactSection = () => {
                     Email <span className="text-champagne">*</span>
                   </label>
                   <Input 
-                    id="email" 
+                    id="email"
+                    name="email"
                     type="email" 
                     placeholder="your@email.com" 
                     required 
+                    maxLength={255}
                     className="bg-background border-border focus:border-champagne focus:ring-champagne"
                   />
                 </div>
@@ -181,10 +250,12 @@ const ContactSection = () => {
                     Phone <span className="text-champagne">*</span>
                   </label>
                   <Input 
-                    id="phone" 
+                    id="phone"
+                    name="phone"
                     type="tel" 
                     placeholder="(555) 555-5555" 
                     required 
+                    maxLength={20}
                     className="bg-background border-border focus:border-champagne focus:ring-champagne"
                   />
                 </div>
@@ -193,7 +264,7 @@ const ContactSection = () => {
                   <label htmlFor="eventType" className="text-sm font-medium text-charcoal">
                     Event Type <span className="text-champagne">*</span>
                   </label>
-                  <Select required>
+                  <Select required value={eventType} onValueChange={setEventType}>
                     <SelectTrigger className="bg-background border-border focus:border-champagne focus:ring-champagne">
                       <SelectValue placeholder="Select event type" />
                     </SelectTrigger>
@@ -212,7 +283,8 @@ const ContactSection = () => {
                     Event Date
                   </label>
                   <Input 
-                    id="eventDate" 
+                    id="eventDate"
+                    name="eventDate"
                     type="date" 
                     className="bg-background border-border focus:border-champagne focus:ring-champagne"
                   />
@@ -222,14 +294,14 @@ const ContactSection = () => {
                   <label htmlFor="location" className="text-sm font-medium text-charcoal">
                     City / Location <span className="text-champagne">*</span>
                   </label>
-                  <Select required>
+                  <Select required value={location} onValueChange={setLocation}>
                     <SelectTrigger className="bg-background border-border focus:border-champagne focus:ring-champagne">
                       <SelectValue placeholder="Select location" />
                     </SelectTrigger>
                     <SelectContent>
-                      {locations.map((location) => (
-                        <SelectItem key={location} value={location.toLowerCase()}>
-                          {location}
+                      {locations.map((loc) => (
+                        <SelectItem key={loc} value={loc.toLowerCase()}>
+                          {loc}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -241,10 +313,12 @@ const ContactSection = () => {
                     Tell Us About Your Vision <span className="text-champagne">*</span>
                   </label>
                   <Textarea 
-                    id="vision" 
+                    id="vision"
+                    name="vision"
                     placeholder="Describe your dream event and how we can help bring it to life..." 
                     required 
                     rows={4}
+                    maxLength={2000}
                     className="bg-background border-border focus:border-champagne focus:ring-champagne resize-none"
                   />
                 </div>
@@ -253,7 +327,7 @@ const ContactSection = () => {
                   <label htmlFor="budget" className="text-sm font-medium text-charcoal">
                     Budget Range (Optional)
                   </label>
-                  <Select>
+                  <Select value={budgetRange} onValueChange={setBudgetRange}>
                     <SelectTrigger className="bg-background border-border focus:border-champagne focus:ring-champagne">
                       <SelectValue placeholder="Select budget range" />
                     </SelectTrigger>
@@ -272,8 +346,10 @@ const ContactSection = () => {
                     How Did You Hear About Us?
                   </label>
                   <Input 
-                    id="source" 
-                    placeholder="Instagram, referral, Google, etc." 
+                    id="source"
+                    name="source"
+                    placeholder="Instagram, referral, Google, etc."
+                    maxLength={200}
                     className="bg-background border-border focus:border-champagne focus:ring-champagne"
                   />
                 </div>
