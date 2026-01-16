@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Menu, X, Settings } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import Logo from '@/components/Logo';
 
 const navLinks = [
   { href: '#services', label: 'Services' },
@@ -69,11 +70,7 @@ const Header = () => {
       <div className="container mx-auto px-6 lg:px-12">
         <nav className="flex items-center justify-between">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2">
-            <span className="text-2xl font-serif tracking-tight text-charcoal">
-              TPEC <span className="text-champagne">Flowers</span>
-            </span>
-          </a>
+          <Logo size="md" variant="light" />
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">

@@ -1,4 +1,5 @@
 import { Instagram, Facebook, MapPin, Phone, Mail } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 const Footer = () => {
   return (
@@ -7,9 +8,9 @@ const Footer = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <h3 className="text-2xl font-serif text-primary-foreground mb-4">
-              TPEC <span className="text-champagne-light">Flowers</span>
-            </h3>
+            <div className="mb-4">
+              <Logo size="lg" variant="dark" />
+            </div>
             <p className="text-muted-foreground max-w-md mb-6">
               Transforming events across Texas with luxury rose backdrops and 
               breathtaking floral experiences since 2018.
