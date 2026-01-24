@@ -35,7 +35,7 @@ const Footer = () => {
                 <Facebook className="w-5 h-5 text-primary-foreground group-hover:text-charcoal" />
               </a>
               <a 
-                href="https://www.pinterest.com/tpecflowers" 
+                href="https://www.pinterest.com/TPECFLOWERS/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-charcoal-light flex items-center justify-center hover:bg-champagne transition-colors group"
