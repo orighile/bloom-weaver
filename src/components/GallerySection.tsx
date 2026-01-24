@@ -11,8 +11,8 @@ import backdropMixedRoses from '@/assets/backdrop-mixed-roses.jpg';
 import backdropWhiteRoses from '@/assets/backdrop-white-roses.jpg';
 import backdropRedRoses from '@/assets/backdrop-red-roses.jpg';
 import backdropGreenFloral from '@/assets/backdrop-green-floral.jpg';
-import backdropPinkRoses from '@/assets/backdrop-pink-roses.jpg';
-import backdropBlushRoses from '@/assets/backdrop-blush-roses.jpg';
+import backdropRoselight from '@/assets/backdrop-roselight.jpg';
+import backdropRoseBlend from '@/assets/backdrop-rose-blend.webp';
 
 const galleryItems = [
   {
@@ -76,15 +76,15 @@ const galleryItems = [
     category: 'Backdrop',
   },
   {
-    src: backdropPinkRoses,
-    title: 'Blush Pink Rose Wall',
-    alt: 'Delicate blush pink rose flower wall backdrop for romantic events',
+    src: backdropRoselight,
+    title: 'Roselight Wall',
+    alt: 'Elegant white and pink rose wall backdrop with greenery for outdoor events',
     category: 'Backdrop',
   },
   {
-    src: backdropBlushRoses,
-    title: 'Elegant Blush Arrangement',
-    alt: 'Elegant blush rose arrangement backdrop for luxury celebrations',
+    src: backdropRoseBlend,
+    title: 'Pink & White Rose Blend',
+    alt: 'Luxurious pink and white rose blend flower wall for elegant celebrations',
     category: 'Backdrop',
   },
 ];
