@@ -2,71 +2,20 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 
-// Validation schema for form data
+// Validation schema for callback request
 const inquirySchema = z.object({
-  name: z.string().trim().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
-  email: z.string().trim().email('Please enter a valid email address').max(255, 'Email must be less than 255 characters'),
-  phone: z.string().trim().min(1, 'Phone is required').max(20, 'Phone must be less than 20 characters'),
-  event_type: z.string().min(1, 'Event type is required'),
-  event_date: z.string().nullable().optional(),
-  location: z.string().min(1, 'Location is required'),
-  vision: z.string().trim().min(1, 'Please tell us about your vision').max(2000, 'Vision must be less than 2000 characters'),
-  budget_range: z.string().nullable().optional(),
-  referral_source: z.string().max(200, 'Referral source must be less than 200 characters').nullable().optional(),
+  name: z.string().trim().min(1, 'First name is required').max(50, 'Name must be less than 50 characters'),
+  phone: z.string().trim().min(1, 'Phone number is required').max(20, 'Phone must be less than 20 characters'),
 });
 
-const eventTypes = [
-  'Wedding',
-  'Corporate Event',
-  'Quinceañera',
-  'Bridal Shower',
-  'Baby Shower',
-  'Birthday Party',
-  'Graduation Party',
-  'Luncheon',
-  'Celebration of Life',
-  'Other',
-];
-
-const locations = [
-  'Austin',
-  'San Antonio',
-  'Houston',
-  'Dallas',
-  'Other',
-];
-
-const budgetRanges = [
-  'Under $500',
-  '$500 - $1,000',
-  '$1,000 - $2,500',
-  '$2,500 - $5,000',
-  '$5,000+',
-  'Not sure yet',
-];
-
-const referralSources = [
-  'Facebook',
-  'Instagram',
-  'Pinterest',
-  'Google',
-  'Friend/Family Referral',
-  'Other',
-];
 
 const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [eventType, setEventType] = useState<string>('');
-  const [location, setLocation] = useState<string>('');
-  const [budgetRange, setBudgetRange] = useState<string>('');
-  const [referralSource, setReferralSource] = useState<string>('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,32 +28,22 @@ const ContactSection = () => {
       // Collect and validate form data
       const rawData = {
         name: formData.get('name') as string,
-        email: formData.get('email') as string,
         phone: formData.get('phone') as string,
-        event_type: eventType,
-        event_date: (formData.get('eventDate') as string) || null,
-        location: location,
-        vision: formData.get('vision') as string,
-        budget_range: budgetRange || null,
-        referral_source: referralSource || null,
       };
 
       // Validate the data
       const validatedData = inquirySchema.parse(rawData);
 
-      // Submit to database
+      // Submit to database with required fields
       const { error } = await supabase
         .from('inquiries')
         .insert({
           name: validatedData.name,
-          email: validatedData.email,
           phone: validatedData.phone,
-          event_type: validatedData.event_type,
-          event_date: validatedData.event_date || null,
-          location: validatedData.location,
-          vision: validatedData.vision,
-          budget_range: validatedData.budget_range || null,
-          referral_source: validatedData.referral_source || null,
+          email: 'callback-request@placeholder.com',
+          event_type: 'Callback Request',
+          location: 'TBD',
+          vision: 'Customer requested a callback',
         });
 
       if (error) throw error;
@@ -114,34 +53,29 @@ const ContactSection = () => {
         await supabase.functions.invoke('send-inquiry-notification', {
           body: {
             name: validatedData.name,
-            email: validatedData.email,
             phone: validatedData.phone,
-            event_type: validatedData.event_type,
-            event_date: validatedData.event_date || null,
-            location: validatedData.location,
-            vision: validatedData.vision,
-            budget_range: validatedData.budget_range || null,
-            referral_source: validatedData.referral_source || null,
+            email: 'N/A',
+            event_type: 'Callback Request',
+            event_date: null,
+            location: 'TBD',
+            vision: 'Customer requested a callback',
+            budget_range: null,
+            referral_source: null,
           },
         });
       } catch (emailError) {
         console.error('Email notification failed:', emailError);
-        // Don't show error to user - inquiry was still saved
       }
 
-      toast.success('Thank you for your inquiry! We\'ll be in touch within 24 hours.');
+      toast.success('Thank you! We\'ll call you back shortly.');
       form.reset();
-      setEventType('');
-      setLocation('');
-      setBudgetRange('');
-      setReferralSource('');
     } catch (error) {
       if (error instanceof z.ZodError) {
         const firstError = error.errors[0];
         toast.error(firstError.message);
       } else {
         console.error('Form submission error:', error);
-        toast.error('Failed to submit inquiry. Please try again.');
+        toast.error('Failed to submit request. Please try again.');
       }
     } finally {
       setIsSubmitting(false);
@@ -246,39 +180,29 @@ const ContactSection = () => {
             className="lg:col-span-2"
           >
             <form onSubmit={handleSubmit} className="bg-card p-8 lg:p-10 rounded-lg shadow-soft border border-border/50">
-              <div className="grid md:grid-cols-2 gap-6">
+              <h3 className="text-xl font-serif mb-6 text-charcoal">Request a Quote</h3>
+              <p className="text-charcoal-light mb-6">
+                Leave your details and we'll call you back to discuss your event!
+              </p>
+              
+              <div className="space-y-6">
                 <div className="space-y-2">
                   <label htmlFor="name" className="text-sm font-medium text-charcoal">
-                    Name <span className="text-champagne">*</span>
+                    First Name <span className="text-champagne">*</span>
                   </label>
                   <Input 
                     id="name"
                     name="name"
-                    placeholder="Your full name" 
+                    placeholder="Your first name" 
                     required 
-                    maxLength={100}
-                    className="bg-background border-border focus:border-champagne focus:ring-champagne"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-medium text-charcoal">
-                    Email <span className="text-champagne">*</span>
-                  </label>
-                  <Input 
-                    id="email"
-                    name="email"
-                    type="email" 
-                    placeholder="your@email.com" 
-                    required 
-                    maxLength={255}
+                    maxLength={50}
                     className="bg-background border-border focus:border-champagne focus:ring-champagne"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <label htmlFor="phone" className="text-sm font-medium text-charcoal">
-                    Phone <span className="text-champagne">*</span>
+                    Callback Number <span className="text-champagne">*</span>
                   </label>
                   <Input 
                     id="phone"
@@ -290,105 +214,6 @@ const ContactSection = () => {
                     className="bg-background border-border focus:border-champagne focus:ring-champagne"
                   />
                 </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="eventType" className="text-sm font-medium text-charcoal">
-                    Event Type <span className="text-champagne">*</span>
-                  </label>
-                  <Select required value={eventType} onValueChange={setEventType}>
-                    <SelectTrigger id="eventType" className="bg-background border-border focus:border-champagne focus:ring-champagne">
-                      <SelectValue placeholder="Select event type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {eventTypes.map((type) => (
-                        <SelectItem key={type} value={type.toLowerCase()}>
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="eventDate" className="text-sm font-medium text-charcoal">
-                    Event Date
-                  </label>
-                  <Input 
-                    id="eventDate"
-                    name="eventDate"
-                    type="date" 
-                    className="bg-background border-border focus:border-champagne focus:ring-champagne"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="location" className="text-sm font-medium text-charcoal">
-                    City / Location <span className="text-champagne">*</span>
-                  </label>
-                  <Select required value={location} onValueChange={setLocation}>
-                    <SelectTrigger id="location" className="bg-background border-border focus:border-champagne focus:ring-champagne">
-                      <SelectValue placeholder="Select location" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {locations.map((loc) => (
-                        <SelectItem key={loc} value={loc.toLowerCase()}>
-                          {loc}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2 md:col-span-2">
-                  <label htmlFor="vision" className="text-sm font-medium text-charcoal">
-                    Tell Us About Your Vision <span className="text-champagne">*</span>
-                  </label>
-                  <Textarea 
-                    id="vision"
-                    name="vision"
-                    placeholder="Describe your dream event and how we can help bring it to life..." 
-                    required 
-                    rows={4}
-                    maxLength={2000}
-                    className="bg-background border-border focus:border-champagne focus:ring-champagne resize-none"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="budget" className="text-sm font-medium text-charcoal">
-                    Budget Range (Optional)
-                  </label>
-                  <Select value={budgetRange} onValueChange={setBudgetRange}>
-                    <SelectTrigger id="budget" className="bg-background border-border focus:border-champagne focus:ring-champagne">
-                      <SelectValue placeholder="Select budget range" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {budgetRanges.map((range) => (
-                        <SelectItem key={range} value={range.toLowerCase()}>
-                          {range}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="source" className="text-sm font-medium text-charcoal">
-                    How Did You Hear About Us?
-                  </label>
-                  <Select value={referralSource} onValueChange={setReferralSource}>
-                    <SelectTrigger id="source" className="bg-background border-border focus:border-champagne focus:ring-champagne">
-                      <SelectValue placeholder="Select an option" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {referralSources.map((source) => (
-                        <SelectItem key={source} value={source.toLowerCase()}>
-                          {source}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
 
               <div className="mt-8">
@@ -396,13 +221,13 @@ const ContactSection = () => {
                   type="submit" 
                   variant="hero" 
                   size="lg" 
-                  className="w-full md:w-auto"
+                  className="w-full"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Sending...' : 'Send My Inquiry'}
+                  {isSubmitting ? 'Sending...' : 'Request Callback'}
                 </Button>
-                <p className="text-sm text-charcoal-light mt-3">
-                  We respond within 24 hours ✨
+                <p className="text-sm text-charcoal-light mt-3 text-center">
+                  We'll call you back within 24 hours ✨
                 </p>
               </div>
             </form>
