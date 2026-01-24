@@ -33,11 +33,11 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("IONOS_SMTP_PASSWORD not configured");
     }
 
-    // Create SMTP client for IONOS
+    // Create SMTP client for IONOS using STARTTLS (port 587)
     const client = new SMTPClient({
       connection: {
         hostname: "smtp.ionos.com",
-        port: 587,
+        port: 465,
         tls: true,
         auth: {
           username: "adeola@tpecflowers.com",
