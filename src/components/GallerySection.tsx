@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import GalleryLightbox from './GalleryLightbox';
 
 import galleryWedding from '@/assets/gallery-wedding.jpg';
 import galleryCorporate from '@/assets/gallery-corporate.jpg';
@@ -91,6 +92,25 @@ const galleryItems = [
 
 const GallerySection = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const openLightbox = useCallback((index: number) => {
+    setCurrentImageIndex(index);
+    setLightboxOpen(true);
+  }, []);
+
+  const closeLightbox = useCallback(() => {
+    setLightboxOpen(false);
+  }, []);
+
+  const goToPrevious = useCallback(() => {
+    setCurrentImageIndex((prev) => (prev === 0 ? galleryItems.length - 1 : prev - 1));
+  }, []);
+
+  const goToNext = useCallback(() => {
+    setCurrentImageIndex((prev) => (prev === galleryItems.length - 1 ? 0 : prev + 1));
+  }, []);
 
   return (
     <section id="gallery" className="py-24 lg:py-32 bg-background">
@@ -135,6 +155,7 @@ const GallerySection = () => {
               className="relative aspect-square overflow-hidden rounded-lg cursor-pointer image-zoom"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() => openLightbox(index)}
             >
               <img
                 src={item.src}
@@ -182,6 +203,16 @@ const GallerySection = () => {
           </a>
         </motion.div>
       </div>
+
+      {/* Lightbox */}
+      <GalleryLightbox
+        isOpen={lightboxOpen}
+        onClose={closeLightbox}
+        images={galleryItems}
+        currentIndex={currentImageIndex}
+        onPrevious={goToPrevious}
+        onNext={goToNext}
+      />
     </section>
   );
 };
