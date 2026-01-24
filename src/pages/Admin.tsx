@@ -26,9 +26,10 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useAuth } from '@/hooks/useAuth';
+import { useAdmin } from '@/hooks/useAdmin';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { LogOut, Eye, Trash2, RefreshCw, ArrowLeft } from 'lucide-react';
+import { LogOut, Eye, Trash2, RefreshCw, ArrowLeft, ShieldX } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface Inquiry {
@@ -69,20 +70,21 @@ const Admin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { user, loading, signOut } = useAuth();
+  const { user, loading: authLoading, signOut } = useAuth();
+  const { isAdmin, loading: adminLoading } = useAdmin();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!authLoading && !user) {
       navigate('/auth');
     }
-  }, [user, loading, navigate]);
+  }, [user, authLoading, navigate]);
 
   useEffect(() => {
-    if (user) {
+    if (user && isAdmin) {
       fetchInquiries();
     }
-  }, [user]);
+  }, [user, isAdmin]);
 
   const fetchInquiries = async () => {
     setIsLoading(true);
@@ -150,10 +152,32 @@ const Admin = () => {
     setIsDialogOpen(true);
   };
 
-  if (loading || (!user && !loading)) {
+  if (authLoading || adminLoading) {
     return (
       <div className="min-h-screen bg-ivory flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-champagne"></div>
+      </div>
+    );
+  }
+
+  if (isAdmin === false) {
+    return (
+      <div className="min-h-screen bg-ivory flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center p-8"
+        >
+          <ShieldX className="w-16 h-16 text-red-400 mx-auto mb-4" />
+          <h1 className="text-2xl font-serif text-charcoal mb-2">Access Denied</h1>
+          <p className="text-charcoal-light mb-6">
+            You don't have permission to access the admin dashboard.
+          </p>
+          <Button variant="outline" onClick={() => navigate('/')}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Home
+          </Button>
+        </motion.div>
       </div>
     );
   }
