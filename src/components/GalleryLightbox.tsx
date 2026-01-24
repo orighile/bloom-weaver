@@ -1,3 +1,4 @@
+import { useEffect, useCallback } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,34 @@ const GalleryLightbox = ({
   onNext,
 }: GalleryLightboxProps) => {
   const currentImage = images[currentIndex];
+
+  // Keyboard navigation
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      switch (event.key) {
+        case 'ArrowLeft':
+          event.preventDefault();
+          onPrevious();
+          break;
+        case 'ArrowRight':
+          event.preventDefault();
+          onNext();
+          break;
+        case 'Escape':
+          event.preventDefault();
+          onClose();
+          break;
+      }
+    },
+    [isOpen, onPrevious, onNext, onClose]
+  );
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   if (!currentImage) return null;
 
