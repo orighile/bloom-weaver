@@ -54,7 +54,7 @@ const Logo = ({ size = 'md', variant = 'light', className = '' }: LogoProps) => 
 
   return (
     <motion.a
-      href="#"
+      href="/"
       className={`flex flex-col items-center ${sizes.gap} ${className}`}
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
