@@ -109,6 +109,26 @@ const ContactSection = () => {
 
       if (error) throw error;
 
+      // Send email notification (fire and forget - don't block on failure)
+      try {
+        await supabase.functions.invoke('send-inquiry-notification', {
+          body: {
+            name: validatedData.name,
+            email: validatedData.email,
+            phone: validatedData.phone,
+            event_type: validatedData.event_type,
+            event_date: validatedData.event_date || null,
+            location: validatedData.location,
+            vision: validatedData.vision,
+            budget_range: validatedData.budget_range || null,
+            referral_source: validatedData.referral_source || null,
+          },
+        });
+      } catch (emailError) {
+        console.error('Email notification failed:', emailError);
+        // Don't show error to user - inquiry was still saved
+      }
+
       toast.success('Thank you for your inquiry! We\'ll be in touch within 24 hours.');
       form.reset();
       setEventType('');
