@@ -29,7 +29,7 @@ const faqItems = [
   },
   {
     question: 'What is included in the rental?',
-    answer: 'All rentals include delivery, professional setup, and pickup. Our team handles everything so you can focus on enjoying your event. Props and accessories can be added for an additional fee.',
+    answer: 'All rentals include the backdrop and pickup. Delivery and professional setup are available upon request for an additional fee. Props and accessories can also be added to enhance your event.',
   },
   {
     question: 'What happens if there\'s bad weather for outdoor events?',
