@@ -16,51 +16,61 @@ const galleryItems = [
   {
     src: galleryWedding,
     title: 'Romantic Wedding Ceremony',
+    alt: 'Luxury rose flower backdrop at romantic wedding ceremony in Austin Texas',
     category: 'Wedding',
   },
   {
     src: galleryCorporate,
     title: 'Corporate Brand Launch',
+    alt: 'Elegant floral backdrop for corporate brand launch event in Texas',
     category: 'Corporate',
   },
   {
     src: galleryQuince,
     title: 'Quinceañera Celebration',
+    alt: 'Beautiful rose wall backdrop for quinceañera celebration',
     category: 'Quinceañera',
   },
   {
     src: galleryBabyshower,
     title: 'Elegant Baby Shower',
+    alt: 'Stunning flower backdrop for elegant baby shower event',
     category: 'Baby Shower',
   },
   {
     src: galleryBridal,
     title: 'Luxe Bridal Shower',
+    alt: 'Luxurious rose flower wall for bridal shower celebration',
     category: 'Bridal Shower',
   },
   {
     src: backdropPinkCream,
     title: 'Pink & Cream Rose Wall',
+    alt: 'Pink and cream rose flower wall backdrop rental in Austin',
     category: 'Backdrop',
   },
   {
     src: backdropMixedRoses,
     title: 'Mixed Rose Wall',
+    alt: 'Mixed color rose flower wall backdrop for events',
     category: 'Backdrop',
   },
   {
     src: backdropWhiteRoses,
     title: 'White Rose Wall',
+    alt: 'Elegant white rose flower wall backdrop for weddings',
     category: 'Backdrop',
   },
   {
     src: backdropRedRoses,
     title: 'Red Rose Wall',
+    alt: 'Romantic red rose flower wall backdrop rental',
     category: 'Backdrop',
   },
   {
     src: backdropGreenFloral,
     title: 'Green Floral Wall',
+    alt: 'Fresh green floral backdrop for outdoor events',
     category: 'Backdrop',
   },
 ];
@@ -114,7 +124,8 @@ const GallerySection = () => {
             >
               <img
                 src={item.src}
-                alt={item.title}
+                alt={item.alt}
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
               

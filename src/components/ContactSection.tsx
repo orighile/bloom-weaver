@@ -265,7 +265,7 @@ const ContactSection = () => {
                     Event Type <span className="text-champagne">*</span>
                   </label>
                   <Select required value={eventType} onValueChange={setEventType}>
-                    <SelectTrigger className="bg-background border-border focus:border-champagne focus:ring-champagne">
+                    <SelectTrigger id="eventType" className="bg-background border-border focus:border-champagne focus:ring-champagne">
                       <SelectValue placeholder="Select event type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -295,7 +295,7 @@ const ContactSection = () => {
                     City / Location <span className="text-champagne">*</span>
                   </label>
                   <Select required value={location} onValueChange={setLocation}>
-                    <SelectTrigger className="bg-background border-border focus:border-champagne focus:ring-champagne">
+                    <SelectTrigger id="location" className="bg-background border-border focus:border-champagne focus:ring-champagne">
                       <SelectValue placeholder="Select location" />
                     </SelectTrigger>
                     <SelectContent>
@@ -328,7 +328,7 @@ const ContactSection = () => {
                     Budget Range (Optional)
                   </label>
                   <Select value={budgetRange} onValueChange={setBudgetRange}>
-                    <SelectTrigger className="bg-background border-border focus:border-champagne focus:ring-champagne">
+                    <SelectTrigger id="budget" className="bg-background border-border focus:border-champagne focus:ring-champagne">
                       <SelectValue placeholder="Select budget range" />
                     </SelectTrigger>
                     <SelectContent>

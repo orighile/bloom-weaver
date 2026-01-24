@@ -69,11 +69,6 @@ const Footer = () => {
                   Contact
                 </a>
               </li>
-              <li>
-                <a href="https://tpecflowers.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary-foreground transition-colors">
-                  Main Website
-                </a>
-              </li>
             </ul>
           </div>
 
