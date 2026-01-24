@@ -27,7 +27,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-serif leading-tight mb-6"
+            className="text-4xl md:text-5xl lg:text-6xl font-serif leading-tight mb-6 text-charcoal drop-shadow-sm"
           >
             Luxury Rose Backdrops for <span className="italic">Unforgettable</span> Events
           </motion.h1>
@@ -36,7 +36,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-lg md:text-xl text-charcoal-light leading-relaxed mb-10 max-w-xl"
+            className="text-lg md:text-xl text-charcoal leading-relaxed mb-10 max-w-xl drop-shadow-sm"
           >
             Transforming weddings, celebrations, and corporate events across Austin and beyond with breathtaking floral
             experiences.

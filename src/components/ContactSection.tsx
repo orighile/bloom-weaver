@@ -52,11 +52,21 @@ const budgetRanges = [
   'Not sure yet',
 ];
 
+const referralSources = [
+  'Facebook',
+  'Instagram',
+  'Pinterest',
+  'Google',
+  'Friend/Family Referral',
+  'Other',
+];
+
 const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [eventType, setEventType] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [budgetRange, setBudgetRange] = useState<string>('');
+  const [referralSource, setReferralSource] = useState<string>('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -76,7 +86,7 @@ const ContactSection = () => {
         location: location,
         vision: formData.get('vision') as string,
         budget_range: budgetRange || null,
-        referral_source: (formData.get('source') as string) || null,
+        referral_source: referralSource || null,
       };
 
       // Validate the data
@@ -104,6 +114,7 @@ const ContactSection = () => {
       setEventType('');
       setLocation('');
       setBudgetRange('');
+      setReferralSource('');
     } catch (error) {
       if (error instanceof z.ZodError) {
         const firstError = error.errors[0];
@@ -345,13 +356,18 @@ const ContactSection = () => {
                   <label htmlFor="source" className="text-sm font-medium text-charcoal">
                     How Did You Hear About Us?
                   </label>
-                  <Input 
-                    id="source"
-                    name="source"
-                    placeholder="Instagram, referral, Google, etc."
-                    maxLength={200}
-                    className="bg-background border-border focus:border-champagne focus:ring-champagne"
-                  />
+                  <Select value={referralSource} onValueChange={setReferralSource}>
+                    <SelectTrigger id="source" className="bg-background border-border focus:border-champagne focus:ring-champagne">
+                      <SelectValue placeholder="Select an option" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {referralSources.map((source) => (
+                        <SelectItem key={source} value={source.toLowerCase()}>
+                          {source}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
